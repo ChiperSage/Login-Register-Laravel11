@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    // Menampilkan form login
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
+    // Menangani proses login
     public function login(Request $request)
     {
         $credentials = $request->only('username', 'password');
@@ -29,6 +31,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // Logout
     public function logout(Request $request)
     {
         Auth::logout();
@@ -37,11 +40,13 @@ class AuthController extends Controller
         return redirect('/');
     }
 
+    // Menampilkan form registrasi
     public function showRegistrationForm()
     {
         return view('auth.register');
     }
 
+    // Menangani proses registrasi
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
@@ -52,22 +57,29 @@ class AuthController extends Controller
         return redirect($this->redirectPath());
     }
 
+    // Validasi input registrasi
     protected function validator(array $data)
     {
         return Validator::make($data, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'username' => ['required', 'string', 'max:100', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
+    // Membuat pengguna baru
     protected function create(array $data)
     {
         return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
             'username' => $data['username'],
             'password' => Hash::make($data['password']),
         ]);
     }
 
+    // Redirect path setelah registrasi atau login
     public function redirectPath()
     {
         return '/home';
