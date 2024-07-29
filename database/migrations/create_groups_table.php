@@ -9,7 +9,7 @@ class CreateGroupsTable extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string('group_name')->unique();
-            $table->foreignId('group_id');
+            $table->foreignId('role_id');
             $table->foreignId('user_id');
             $table->timestamps();
         });
