@@ -7,13 +7,9 @@ class CreateGroupsTable extends Migration
     public function up()
     {
         Schema::create('groups', function (Blueprint $table) {
-            $table->id('group_id');
-            $table->unsignedBigInteger('role_id')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->id();
+            $table->string('name')->unique();
             $table->timestamps();
-
-            $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('set null');
-            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('set null');
         });
     }
 
