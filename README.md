@@ -25,6 +25,9 @@ This code implements a basic user authentication and management system in a Lara
 
 ### **Usage:**
 
+Laravel11
+MYSQL
+
 1. **Migration**: Apply migrations to create the database structure.
    ```bash
    php artisan migrate
