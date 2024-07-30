@@ -12,14 +12,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('groups', function (Blueprint $table) {
-            $table->id();
-            $table->string('group_name')->unique();
+            $table->id('group_id');
             $table->foreignId('role_id');
             $table->foreignId('user_id');
             $table->timestamps();
-
-            $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('set null');
-            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('set null');
         });
     }
 
