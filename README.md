@@ -28,9 +28,10 @@ This code implements a basic user authentication and management system in a Lara
 1. **Migration**: Apply migrations to create the database structure.
    ```bash
    php artisan migrate
+   php artisan db:seed
    ```
 
-2. **Authentication**: Implement login and registration routes/controllers using Laravel's built-in authentication features.
+2. **Authentication**: Implement login and registration routes/controllers.
 
 ---
 
