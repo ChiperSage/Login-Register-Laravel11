@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Role;
+use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -85,5 +87,39 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('user.index')->with('success', 'User deleted successfully.');
+    }
+
+    public function assignRole($user_id)
+    {
+        $user = User::with('roles')->findOrFail($user_id);
+        $roles = Role::all();
+        return view('user.assign_role', compact('user', 'roles'));
+    }
+
+    public function storeRoleAssignment(Request $request, $user_id)
+    {
+        $validatedData = $request->validate([
+            'role_ids' => 'array',
+            'role_ids.*' => 'exists:roles,role_id',
+        ]);
+
+        $user = User::findOrFail($user_id);
+        $currentRoles = $user->roles->pluck('role_id')->toArray();
+        $newRoles = $validatedData['role_ids'] ?? [];
+
+        // Tambahkan peran baru
+        foreach (array_diff($newRoles, $currentRoles) as $role_id) {
+            Group::create([
+                'user_id' => $user_id,
+                'role_id' => $role_id,
+            ]);
+        }
+
+        // Hapus peran yang tidak lagi dipilih
+        foreach (array_diff($currentRoles, $newRoles) as $role_id) {
+            Group::where('user_id', $user_id)->where('role_id', $role_id)->delete();
+        }
+
+        return redirect()->route('user.index')->with('success', 'Roles assigned successfully.');
     }
 }
